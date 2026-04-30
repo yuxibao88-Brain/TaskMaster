@@ -7,7 +7,11 @@ import {
   openAddTask,
   cancelAdd,
 } from "../store.js";
-import { addTask, patchTask, deleteTask as deleteTaskApi } from "../api/task.js";
+import {
+  addTask,
+  patchTask,
+  deleteTask as deleteTaskApi,
+} from "../api/task.js";
 import { deleteTaskList } from "../api/taskList.js";
 
 // 保存任务（调后端接口）
@@ -29,7 +33,7 @@ const saveTask = async (list) => {
       date: "",
       completed: 0,
       starred: 0,
-      created_at: new Date().toISOString().replace('T', ' ').substring(0, 19)
+      created_at: new Date().toISOString().replace("T", " ").substring(0, 19),
     });
     list.newTaskTitle = "";
     list.newTaskDetails = "";
@@ -59,7 +63,8 @@ const handleDeleteTask = async (list, task) => {
   const res = await deleteTaskApi(task.id);
   if (res.code === 200) {
     // 星标视图传 null，需要遍历查找所属列表
-    const targetList = list || lists.value.find((l) => l.tasks.some((t) => t.id === task.id));
+    const targetList =
+      list || lists.value.find((l) => l.tasks.some((t) => t.id === task.id));
     if (targetList) {
       targetList.tasks = targetList.tasks.filter((t) => t.id !== task.id);
     }
@@ -87,7 +92,9 @@ const handleDeleteList = async (list) => {
           <h2 class="list-title">已加星标的任务</h2>
           <button class="icon-btn more-btn">
             <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+              <path
+                d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+              />
             </svg>
           </button>
         </div>
@@ -95,7 +102,15 @@ const handleDeleteList = async (list) => {
         <div class="add-transition-wrapper">
           <div class="add-task-trigger">
             <span class="add-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                width="18"
+                height="18"
+              >
                 <path d="M12 5v14M5 12h14"></path>
               </svg>
             </span>
@@ -125,13 +140,33 @@ const handleDeleteList = async (list) => {
             v-for="task in allStarredTasks"
             :key="task.id"
             :class="{ completed: task.completed }"
-            v-show="!selectedDate || (task.created_at && task.created_at.substring(0, 10) === selectedDate)"
+            v-show="
+              !selectedDate ||
+              (task.created_at &&
+                task.created_at.substring(0, 10) === selectedDate)
+            "
           >
             <button class="circle-btn" @click="toggleTask(task)">
-              <svg v-if="task.completed" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              <svg
+                v-if="task.completed"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="20"
+                height="20"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
               </svg>
-              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+              <svg
+                v-else
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="20"
+                height="20"
+              >
                 <circle cx="12" cy="12" r="10"></circle>
               </svg>
             </button>
@@ -147,19 +182,51 @@ const handleDeleteList = async (list) => {
               </div>
             </div>
             <div class="task-actions">
-              <button class="action-btn delete-btn" @click="handleDeleteTask(null, task)" title="删除">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              <button
+                class="action-btn delete-btn"
+                @click="handleDeleteTask(null, task)"
+                title="删除"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  width="18"
+                  height="18"
+                >
+                  <path
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
               </button>
               <button
                 class="action-btn"
                 @click="toggleStar(task)"
                 :class="{ 'is-starred': task.starred }"
               >
-                <svg v-if="task.starred" viewBox="0 0 24 24" fill="#fbbc04" width="18" height="18">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                <svg
+                  v-if="task.starred"
+                  viewBox="0 0 24 24"
+                  fill="#fbbc04"
+                  width="18"
+                  height="18"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  ></polygon>
                 </svg>
-                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" width="18" height="18">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                <svg
+                  v-else
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linejoin="round"
+                  width="18"
+                  height="18"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  ></polygon>
                 </svg>
               </button>
             </div>
@@ -179,8 +246,16 @@ const handleDeleteList = async (list) => {
       >
         <div class="list-header">
           <h2 class="list-title">{{ list.name }}</h2>
-          <button class="icon-btn more-btn" @click="handleDeleteList(list)" title="删除列表">
-            <svg viewBox="0 0 24 24" fill="#5f6368" width="20" height="20"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          <button
+            class="icon-btn more-btn"
+            @click="handleDeleteList(list)"
+            title="删除列表"
+          >
+            <svg viewBox="0 0 24 24" fill="#5f6368" width="20" height="20">
+              <path
+                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+              />
+            </svg>
           </button>
         </div>
 
@@ -194,7 +269,15 @@ const handleDeleteList = async (list) => {
               @click="openAddTask(list)"
             >
               <span class="add-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  width="18"
+                  height="18"
+                >
                   <path d="M12 5v14M5 12h14"></path>
                 </svg>
               </span>
@@ -205,7 +288,14 @@ const handleDeleteList = async (list) => {
             <div v-else class="add-task-form">
               <div class="form-inputs">
                 <button class="circle-empty" @click="cancelAdd(list)">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    width="20"
+                    height="20"
+                  >
                     <circle cx="12" cy="12" r="10"></circle>
                   </svg>
                 </button>
@@ -228,10 +318,17 @@ const handleDeleteList = async (list) => {
                   />
                 </div>
               </div>
-              <div class="form-actions" style="justify-content: flex-end;">
+              <div class="form-actions" style="justify-content: flex-end">
                 <button class="save-btn" @click="saveTask(list)">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                    <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    width="20"
+                    height="20"
+                  >
+                    <path
+                      d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"
+                    />
                   </svg>
                 </button>
               </div>
@@ -246,13 +343,33 @@ const handleDeleteList = async (list) => {
             v-for="task in list.tasks"
             :key="task.id"
             :class="{ completed: task.completed }"
-            v-show="!selectedDate || (task.created_at && task.created_at.substring(0, 10) === selectedDate)"
+            v-show="
+              !selectedDate ||
+              (task.created_at &&
+                task.created_at.substring(0, 10) === selectedDate)
+            "
           >
             <button class="circle-btn" @click="toggleTask(task)">
-              <svg v-if="task.completed" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              <svg
+                v-if="task.completed"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="20"
+                height="20"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
               </svg>
-              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+              <svg
+                v-else
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                width="20"
+                height="20"
+              >
                 <circle cx="12" cy="12" r="10"></circle>
               </svg>
             </button>
@@ -270,19 +387,51 @@ const handleDeleteList = async (list) => {
 
             <!-- 悬浮操作按钮 -->
             <div class="task-actions">
-              <button class="action-btn delete-btn" @click="handleDeleteTask(list, task)" title="删除">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              <button
+                class="action-btn delete-btn"
+                @click="handleDeleteTask(list, task)"
+                title="删除"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  width="18"
+                  height="18"
+                >
+                  <path
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  />
+                </svg>
               </button>
               <button
                 class="action-btn"
                 @click="toggleStar(task)"
                 :class="{ 'is-starred': task.starred }"
               >
-                <svg v-if="task.starred" viewBox="0 0 24 24" fill="#fbbc04" width="18" height="18">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                <svg
+                  v-if="task.starred"
+                  viewBox="0 0 24 24"
+                  fill="#fbbc04"
+                  width="18"
+                  height="18"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  ></polygon>
                 </svg>
-                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" width="18" height="18">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                <svg
+                  v-else
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linejoin="round"
+                  width="18"
+                  height="18"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  ></polygon>
                 </svg>
               </button>
             </div>
@@ -312,8 +461,6 @@ const handleDeleteList = async (list) => {
   align-items: flex-start;
 }
 
-
-
 /* 单个任务列表卡片 */
 .task-list {
   width: 360px;
@@ -325,7 +472,9 @@ const handleDeleteList = async (list) => {
   max-height: 100%;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.03),
+    0 1px 2px rgba(0, 0, 0, 0.02);
   position: relative;
 }
 
@@ -438,7 +587,9 @@ const handleDeleteList = async (list) => {
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 0 0 1px rgba(26, 115, 232, 0.2);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(26, 115, 232, 0.2);
 }
 
 .form-inputs {

@@ -18,7 +18,9 @@ router.post("/register", (req, res) => {
   }
 
   // 检查用户名是否已存在
-  const existing = db.prepare("SELECT id FROM users WHERE username = ?").get(username);
+  const existing = db
+    .prepare("SELECT id FROM users WHERE username = ?")
+    .get(username);
   if (existing) {
     return res.json({ code: 400, message: "用户名已存在" });
   }
@@ -27,9 +29,15 @@ router.post("/register", (req, res) => {
   const hashedPassword = bcrypt.hashSync(password, 10);
 
   // 插入用户
-  const result = db.prepare("INSERT INTO users (username, password) VALUES (?, ?)").run(username, hashedPassword);
+  const result = db
+    .prepare("INSERT INTO users (username, password) VALUES (?, ?)")
+    .run(username, hashedPassword);
 
-  res.json({ code: 200, message: "注册成功", data: { id: result.lastInsertRowid } });
+  res.json({
+    code: 200,
+    message: "注册成功",
+    data: { id: result.lastInsertRowid },
+  });
 });
 
 // 登录
@@ -42,7 +50,9 @@ router.post("/login", (req, res) => {
   }
 
   // 查找用户
-  const user = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
+  const user = db
+    .prepare("SELECT * FROM users WHERE username = ?")
+    .get(username);
   if (!user) {
     return res.json({ code: 400, message: "用户名不存在" });
   }
@@ -54,9 +64,13 @@ router.post("/login", (req, res) => {
   }
 
   // 生成 JWT token（有效期 7 天）
-  const token = jwt.sign({ userId: user.id, username: user.username }, JWT_SECRET, {
-    expiresIn: "7d",
-  });
+  const token = jwt.sign(
+    { userId: user.id, username: user.username },
+    JWT_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
 
   res.json({
     code: 200,
@@ -87,7 +101,7 @@ router.post("/google-login", async (req, res) => {
 
     // 查找用户，如果没有则自动注册
     let user = db.prepare("SELECT * FROM users WHERE username = ?").get(email);
-    
+
     if (!user) {
       // 创建新用户，因为是第三方登录，密码可以留空或随机
       const result = db
@@ -100,7 +114,7 @@ router.post("/google-login", async (req, res) => {
     const token = jwt.sign(
       { userId: user.id, username: user.username },
       JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     res.json({
@@ -110,7 +124,10 @@ router.post("/google-login", async (req, res) => {
     });
   } catch (error) {
     console.error("Google 登录失败:", error);
-    res.json({ code: 401, message: "Google 登录验证失败，请检查 Client ID 是否配置正确" });
+    res.json({
+      code: 401,
+      message: "Google 登录验证失败，请检查 Client ID 是否配置正确",
+    });
   }
 });
 

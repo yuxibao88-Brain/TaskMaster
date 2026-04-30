@@ -161,7 +161,7 @@ import {
   width: 120px;
   height: 44px;
   background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -213,7 +213,7 @@ import {
 .nav-item.active {
   background: #ffffff;
   color: #1a73e8;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .nav-icon {
@@ -234,7 +234,7 @@ import {
 
 .nav-divider {
   height: 1px;
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.06);
   margin: 12px 16px;
 }
 

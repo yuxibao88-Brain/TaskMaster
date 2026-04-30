@@ -81,7 +81,9 @@ const handleAvatarChange = (file) => {
     <div class="header-left">
       <div class="header-branding">
         <button class="icon-btn hamburger" @click="toggleSidebar">
-          <svg viewBox="0 0 24 24" fill="#5f6368" width="24" height="24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#5f6368" width="24" height="24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+          </svg>
         </button>
         <div class="logo">
           <img src="/favicon.svg" class="logo-img" alt="Tasks Logo" />
@@ -93,7 +95,9 @@ const handleAvatarChange = (file) => {
 
     <div class="header-right">
       <span class="username">{{ userProfile.nickname || props.username }}</span>
-      <span class="bio-text" v-if="userProfile.bio" :title="userProfile.bio">{{ userProfile.bio }}</span>
+      <span class="bio-text" v-if="userProfile.bio" :title="userProfile.bio">{{
+        userProfile.bio
+      }}</span>
       <el-popconfirm
         title="确定要退出当前账号吗？"
         confirm-button-text="确定"
@@ -106,9 +110,15 @@ const handleAvatarChange = (file) => {
           <button class="logout-btn">退出</button>
         </template>
       </el-popconfirm>
-      <div class="avatar" @click="showProfileModal = true" style="cursor: pointer;">
+      <div
+        class="avatar"
+        @click="showProfileModal = true"
+        style="cursor: pointer"
+      >
         <img v-if="userProfile.avatar" :src="userProfile.avatar" alt="avatar" />
-        <span v-else>{{ (userProfile.nickname || props.username)?.charAt(0)?.toUpperCase() }}</span>
+        <span v-else>{{
+          (userProfile.nickname || props.username)?.charAt(0)?.toUpperCase()
+        }}</span>
       </div>
     </div>
 
@@ -125,27 +135,65 @@ const handleAvatarChange = (file) => {
             :on-change="handleAvatarChange"
             accept="image/*"
           >
-            <img v-if="profileForm.avatar" :src="profileForm.avatar" class="uploaded-avatar" />
+            <img
+              v-if="profileForm.avatar"
+              :src="profileForm.avatar"
+              class="uploaded-avatar"
+            />
             <div v-else class="upload-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#8c939d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="48" height="48" style="margin-bottom: 8px;">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#8c939d"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="48"
+                height="48"
+                style="margin-bottom: 8px"
+              >
+                <path
+                  d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"
+                />
               </svg>
-              <div class="el-upload__text">将图片拖拽至此，或 <em>点击上传</em></div>
-              <div class="el-upload__tip" style="margin-top: 8px; color: #999; font-size: 12px; line-height: 1.4;">支持 jpg/png 格式<br>大小不超过 2MB</div>
+              <div class="el-upload__text">
+                将图片拖拽至此，或 <em>点击上传</em>
+              </div>
+              <div
+                class="el-upload__tip"
+                style="
+                  margin-top: 8px;
+                  color: #999;
+                  font-size: 12px;
+                  line-height: 1.4;
+                "
+              >
+                支持 jpg/png 格式<br />大小不超过 2MB
+              </div>
             </div>
           </el-upload>
         </el-form-item>
         <el-form-item label="名称">
-          <el-input v-model="profileForm.nickname" placeholder="请输入您的名称" />
+          <el-input
+            v-model="profileForm.nickname"
+            placeholder="请输入您的名称"
+          />
         </el-form-item>
         <el-form-item label="个性签名">
-          <el-input v-model="profileForm.bio" type="textarea" :rows="2" placeholder="写一句喜欢的话..." />
+          <el-input
+            v-model="profileForm.bio"
+            type="textarea"
+            :rows="2"
+            placeholder="写一句喜欢的话..."
+          />
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="showProfileModal = false">取消</el-button>
-          <el-button type="primary" @click="saveProfile" :loading="saving">保存</el-button>
+          <el-button type="primary" @click="saveProfile" :loading="saving"
+            >保存</el-button
+          >
         </span>
       </template>
     </el-dialog>
@@ -183,13 +231,18 @@ const handleAvatarChange = (file) => {
 }
 
 .header-branding::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0;
   top: 20px;
   bottom: 20px;
   width: 1px;
-  background-color: rgba(0, 0, 0, 0.08); /* 稍微加深一点点让这根线更像一个独立的分割符 */
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.08
+  ); /* 稍微加深一点点让这根线更像一个独立的分割符 */
 }
 
 .header-right {
@@ -313,7 +366,7 @@ const handleAvatarChange = (file) => {
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #e8f0fe;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .upload-placeholder {

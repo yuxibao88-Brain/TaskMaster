@@ -7,8 +7,11 @@ export const isListsCollapsed = ref(false);
 export const showNewListModal = ref(false);
 export const newListName = ref("");
 
-// 选中的日历日期过滤（默认不选中任何日期，展示所有）
-export const selectedDate = ref("");
+// 选中的日历日期过滤（默认选中今天）
+const today = new Date();
+const _m = String(today.getMonth() + 1).padStart(2, "0");
+const _d = String(today.getDate()).padStart(2, "0");
+export const selectedDate = ref(`${today.getFullYear()}-${_m}-${_d}`);
 
 export const lists = ref([]);
 
