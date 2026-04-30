@@ -1,5 +1,8 @@
 <script setup>
 import { toggleSidebar } from "../store.js";
+
+const props = defineProps({ username: String });
+const emit = defineEmits(["logout"]);
 </script>
 
 <template>
@@ -14,9 +17,9 @@ import { toggleSidebar } from "../store.js";
       </div>
     </div>
     <div class="header-right">
-      <button class="icon-btn">?</button>
-      <button class="icon-btn">⋮⋮</button>
-      <div class="avatar"></div>
+      <span class="username">{{ props.username }}</span>
+      <button class="logout-btn" @click="emit('logout')">退出</button>
+      <div class="avatar">{{ props.username?.charAt(0)?.toUpperCase() }}</div>
     </div>
   </header>
 </template>
@@ -81,7 +84,33 @@ import { toggleSidebar } from "../store.js";
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #ffab40;
-  margin-left: 8px;
+  background: #1a73e8;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.username {
+  font-size: 14px;
+  color: #3c4043;
+  font-weight: 500;
+}
+
+.logout-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #5f6368;
+  background: none;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background: #f1f3f4;
 }
 </style>

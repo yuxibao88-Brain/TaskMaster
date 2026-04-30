@@ -6,11 +6,77 @@ import {
   dateOptions,
   openAddTask,
   setDate,
-  saveTask,
-  toggleTask,
-  toggleStar,
   cancelAdd,
 } from "../store.js";
+import { addTask, patchTask, deleteTask as deleteTaskApi } from "../api/task.js";
+import { deleteTaskList } from "../api/taskList.js";
+
+// 保存任务（调后端接口）
+const saveTask = async (list) => {
+  if (!list.newTaskTitle.trim()) {
+    list.isAdding = false;
+    return;
+  }
+  const res = await addTask(list.id, {
+    title: list.newTaskTitle,
+    details: list.newTaskDetails,
+    date: list.newTaskDate,
+  });
+  if (res.code === 200) {
+    list.tasks.unshift({
+      id: res.data.id,
+      title: list.newTaskTitle,
+      details: list.newTaskDetails,
+      date: list.newTaskDate,
+      completed: 0,
+      starred: 0,
+    });
+    list.newTaskTitle = "";
+    list.newTaskDetails = "";
+    list.newTaskDate = "";
+  }
+};
+
+// 切换完成状态（调后端接口）
+const toggleTask = async (task) => {
+  const newVal = task.completed ? 0 : 1;
+  const res = await patchTask(task.id, { completed: newVal });
+  if (res.code === 200) {
+    task.completed = newVal;
+  }
+};
+
+// 切换星标状态（调后端接口）
+const toggleStar = async (task) => {
+  const newVal = task.starred ? 0 : 1;
+  const res = await patchTask(task.id, { starred: newVal });
+  if (res.code === 200) {
+    task.starred = newVal;
+  }
+};
+
+// 删除任务（调后端接口）
+const handleDeleteTask = async (list, task) => {
+  const res = await deleteTaskApi(task.id);
+  if (res.code === 200) {
+    // 星标视图传 null，需要遍历查找所属列表
+    const targetList = list || lists.value.find((l) => l.tasks.some((t) => t.id === task.id));
+    if (targetList) {
+      targetList.tasks = targetList.tasks.filter((t) => t.id !== task.id);
+    }
+  }
+};
+
+// 删除列表（调后端接口）
+const handleDeleteList = async (list) => {
+  const res = await deleteTaskList(list.id);
+  if (res.code === 200) {
+    lists.value = lists.value.filter((l) => l.id !== list.id);
+    if (currentMenu.value === list.id) {
+      currentMenu.value = "all";
+    }
+  }
+};
 </script>
 
 <template>
@@ -74,7 +140,9 @@ import {
               </div>
             </div>
             <div class="task-actions">
-              <button class="action-btn">⋮</button>
+              <button class="action-btn delete-btn" @click="handleDeleteTask(null, task)" title="删除">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
               <button
                 class="action-btn"
                 @click="toggleStar(task)"
@@ -100,7 +168,9 @@ import {
         <div class="list-drag-handle"></div>
         <div class="list-header">
           <h2 class="list-title">{{ list.name }}</h2>
-          <button class="icon-btn more-btn">⋮</button>
+          <button class="icon-btn more-btn" @click="handleDeleteList(list)" title="删除列表">
+            <svg viewBox="0 0 24 24" fill="#5f6368" width="20" height="20"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          </button>
         </div>
 
         <!-- 添加区域平滑切换动画 -->
@@ -188,7 +258,9 @@ import {
 
             <!-- 悬浮操作按钮 -->
             <div class="task-actions">
-              <button class="action-btn">⋮</button>
+              <button class="action-btn delete-btn" @click="handleDeleteTask(list, task)" title="删除">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
               <button
                 class="action-btn"
                 @click="toggleStar(task)"
@@ -542,6 +614,11 @@ import {
 .action-btn:hover {
   background: #e8eaed;
   color: #202124;
+}
+
+.delete-btn:hover {
+  background: #fce8e6;
+  color: #d93025;
 }
 
 .circle-btn {

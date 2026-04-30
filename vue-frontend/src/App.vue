@@ -1,13 +1,69 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import AppHeader from "./components/AppHeader.vue";
 import AppSidebar from "./components/AppSidebar.vue";
 import TaskBoard from "./components/TaskBoard.vue";
 import AddListModal from "./components/AddListModal.vue";
+import LoginPage from "./components/LoginPage.vue";
+import { lists } from "./store.js";
+import { getTaskLists } from "./api/taskList.js";
+
+// 登录状态
+const isLoggedIn = ref(false);
+const currentUser = ref("");
+
+// 加载任务数据
+const loadData = async () => {
+  const res = await getTaskLists();
+  if (res.code === 200) {
+    res.data.forEach((list) => {
+      list.isAdding = false;
+      list.newTaskTitle = "";
+      list.newTaskDetails = "";
+      list.newTaskDate = "";
+    });
+    lists.value = res.data;
+  } else if (res.code === 401) {
+    // token 过期，退出登录
+    handleLogout();
+  }
+};
+
+// 登录成功回调
+const handleLoginSuccess = (username) => {
+  isLoggedIn.value = true;
+  currentUser.value = username;
+  loadData();
+};
+
+// 退出登录
+const handleLogout = () => {
+  isLoggedIn.value = false;
+  currentUser.value = "";
+  lists.value = [];
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+};
+
+// 页面加载时检查是否已登录
+onMounted(() => {
+  const token = localStorage.getItem("token");
+  const username = localStorage.getItem("username");
+  if (token) {
+    isLoggedIn.value = true;
+    currentUser.value = username || "";
+    loadData();
+  }
+});
 </script>
 
 <template>
-  <div class="app-container">
-    <AppHeader />
+  <!-- 未登录：显示登录页 -->
+  <LoginPage v-if="!isLoggedIn" @login-success="handleLoginSuccess" />
+
+  <!-- 已登录：显示主应用 -->
+  <div class="app-container" v-else>
+    <AppHeader :username="currentUser" @logout="handleLogout" />
     <div class="main-layout">
       <AppSidebar />
       <TaskBoard />

@@ -6,8 +6,12 @@ const cors = require("cors");
 require("./db");
 
 // 引入路由模块
+const authRouter = require("./routes/auth");
 const taskListsRouter = require("./routes/taskLists");
 const tasksRouter = require("./routes/tasks");
+
+// 引入认证中间件
+const authMiddleware = require("./middleware/auth");
 
 const app = express();
 
@@ -16,10 +20,12 @@ app.use(cors());         // 允许前端跨域访问
 app.use(express.json()); // 解析 JSON 请求体
 
 // 注册路由
-// 这里的路径是"前缀"，会拼接到路由文件里的路径前面
-// 比如 taskListsRouter 里写 router.get("/")，实际访问路径就是 /api/vue-frontend/task-lists/
-app.use("/api/vue-frontend/task-lists", taskListsRouter);
-app.use("/api/vue-frontend/tasks", tasksRouter);
+// 登录注册不需要 token 验证（公开接口）
+app.use("/api/vue-frontend/auth", authRouter);
+
+// 以下接口需要登录后才能访问（受保护接口）
+app.use("/api/vue-frontend/task-lists", authMiddleware, taskListsRouter);
+app.use("/api/vue-frontend/tasks", authMiddleware, tasksRouter);
 
 // 启动服务
 app.listen(3001, () => {

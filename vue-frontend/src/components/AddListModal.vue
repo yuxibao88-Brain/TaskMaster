@@ -1,5 +1,25 @@
 <script setup>
-import { showNewListModal, newListName, createNewList } from "../store.js";
+import { showNewListModal, newListName, lists } from "../store.js";
+import { addTaskList } from "../api/taskList.js";
+
+// 直接在组件里调接口
+const createNewList = async () => {
+  if (!newListName.value.trim()) return;
+  const res = await addTaskList({ name: newListName.value.trim() });
+  if (res.code === 200) {
+    lists.value.push({
+      id: res.data.id,
+      name: newListName.value.trim(),
+      isAdding: false,
+      newTaskTitle: "",
+      newTaskDetails: "",
+      newTaskDate: "",
+      tasks: [],
+    });
+    newListName.value = "";
+    showNewListModal.value = false;
+  }
+};
 </script>
 
 <template>
