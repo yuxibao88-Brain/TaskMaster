@@ -123,78 +123,63 @@ const handleAvatarChange = (file) => {
     </div>
 
     <!-- 个人资料设置弹窗 -->
-    <el-dialog v-model="showProfileModal" title="个人资料设置" width="400px">
-      <el-form label-width="80px" @submit.prevent>
-        <el-form-item label="设置头像">
+    <el-dialog v-model="showProfileModal" title="个人资料设置" width="420px" class="premium-dialog" :show-close="true">
+      <div class="profile-modal-body">
+        <div class="avatar-upload-container">
           <el-upload
-            class="avatar-uploader"
-            drag
+            class="avatar-uploader-circle"
             action="#"
             :show-file-list="false"
             :auto-upload="false"
             :on-change="handleAvatarChange"
             accept="image/*"
           >
-            <img
-              v-if="profileForm.avatar"
-              :src="profileForm.avatar"
-              class="uploaded-avatar"
-            />
-            <div v-else class="upload-placeholder">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#8c939d"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                width="48"
-                height="48"
-                style="margin-bottom: 8px"
-              >
-                <path
-                  d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"
-                />
-              </svg>
-              <div class="el-upload__text">
-                将图片拖拽至此，或 <em>点击上传</em>
+            <div class="avatar-wrapper">
+              <img
+                v-if="profileForm.avatar"
+                :src="profileForm.avatar"
+                class="uploaded-avatar"
+              />
+              <div v-else class="upload-placeholder-circle">
+                <span class="default-avatar-text">{{ profileForm.nickname?.charAt(0)?.toUpperCase() || 'U' }}</span>
               </div>
-              <div
-                class="el-upload__tip"
-                style="
-                  margin-top: 8px;
-                  color: #999;
-                  font-size: 12px;
-                  line-height: 1.4;
-                "
-              >
-                支持 jpg/png 格式<br />大小不超过 2MB
+              <div class="avatar-hover-overlay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
               </div>
             </div>
           </el-upload>
-        </el-form-item>
-        <el-form-item label="名称">
-          <el-input
-            v-model="profileForm.nickname"
-            placeholder="请输入您的名称"
-          />
-        </el-form-item>
-        <el-form-item label="个性签名">
-          <el-input
-            v-model="profileForm.bio"
-            type="textarea"
-            :rows="2"
-            placeholder="写一句喜欢的话..."
-          />
-        </el-form-item>
-      </el-form>
+          <div class="avatar-hint">点击更换头像</div>
+        </div>
+
+        <el-form label-position="top" @submit.prevent>
+          <el-form-item label="名称">
+            <el-input
+              v-model="profileForm.nickname"
+              placeholder="请输入您的名称"
+              size="large"
+              class="premium-input"
+            />
+          </el-form-item>
+          <el-form-item label="个性签名">
+            <el-input
+              v-model="profileForm.bio"
+              type="textarea"
+              :rows="3"
+              placeholder="写一句喜欢的话..."
+              class="premium-input"
+              resize="none"
+            />
+          </el-form-item>
+        </el-form>
+      </div>
       <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="showProfileModal = false">取消</el-button>
-          <el-button type="primary" @click="saveProfile" :loading="saving"
-            >保存</el-button
-          >
-        </span>
+        <div class="premium-dialog-footer">
+          <el-button class="premium-btn-cancel" @click="showProfileModal = false">取消</el-button>
+          <el-button class="premium-btn-save" type="primary" @click="saveProfile" :loading="saving">保存修改</el-button>
+        </div>
       </template>
     </el-dialog>
   </header>
@@ -340,38 +325,168 @@ const handleAvatarChange = (file) => {
   border-radius: 50%;
 }
 
-.avatar-uploader :deep(.el-upload) {
-  width: 100%;
-}
-.avatar-uploader :deep(.el-upload-dragger) {
-  padding: 20px;
-  height: 180px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  border: 1px dashed #dcdfe6;
-  background-color: #fafafa;
-  transition: all 0.3s;
-}
-.avatar-uploader :deep(.el-upload-dragger:hover) {
-  border-color: #1a73e8;
-  background-color: #f1f8ff;
+/* ================== Premium Profile Modal Styles ================== */
+:deep(.premium-dialog) {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-.uploaded-avatar {
+:deep(.premium-dialog .el-dialog__header) {
+  padding: 24px 32px 16px;
+  margin: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  text-align: center;
+}
+
+:deep(.premium-dialog .el-dialog__title) {
+  font-weight: 700;
+  font-size: 18px;
+  color: #1d1d1f;
+}
+
+:deep(.premium-dialog .el-dialog__body) {
+  padding: 32px;
+}
+
+:deep(.premium-dialog .el-dialog__footer) {
+  padding: 16px 32px 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.avatar-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.avatar-uploader-circle {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #e8f0fe;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border: 3px solid #ffffff;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: #f2f2f7;
 }
 
-.upload-placeholder {
+.avatar-uploader-circle:hover {
+  transform: scale(1.05);
+}
+
+.avatar-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
+
+.uploaded-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-placeholder-circle {
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+  color: #fff;
+}
+
+.default-avatar-text {
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.avatar-hover-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: 50%;
+}
+
+.avatar-wrapper:hover .avatar-hover-overlay {
+  opacity: 1;
+}
+
+.avatar-hint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #86868b;
+  font-weight: 500;
+}
+
+.premium-input :deep(.el-input__wrapper),
+.premium-input :deep(.el-textarea__inner) {
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06) inset;
+  background: #f9f9f9;
+  transition: all 0.2s;
+  padding: 12px 16px;
+  font-size: 15px;
+}
+
+.premium-input :deep(.el-input__wrapper:hover),
+.premium-input :deep(.el-textarea__inner:hover) {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
+  background: #ffffff;
+}
+
+.premium-input :deep(.el-input__wrapper.is-focus),
+.premium-input :deep(.el-textarea__inner:focus) {
+  box-shadow: 0 0 0 2px #007aff inset !important;
+  background: #ffffff;
+}
+
+.premium-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.premium-btn-cancel,
+.premium-btn-save {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  height: 44px;
+  border: none;
+  transition: all 0.2s;
+}
+
+.premium-btn-cancel {
+  background: #f2f2f7;
+  color: #1d1d1f;
+}
+
+.premium-btn-cancel:hover {
+  background: #e5e5ea;
+}
+
+.premium-btn-save {
+  background: #007aff;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+}
+
+.premium-btn-save:hover {
+  background: #006ce6;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
 }
 </style>
