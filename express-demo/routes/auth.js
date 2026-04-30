@@ -65,6 +65,55 @@ router.post("/login", (req, res) => {
   });
 });
 
+// Google 登录
+const { OAuth2Client } = require("google-auth-library");
+// 这里换成你的 Google Client ID
+const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID";
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+router.post("/google-login", async (req, res) => {
+  const { credential } = req.body;
+  if (!credential) {
+    return res.json({ code: 400, message: "缺少 Google 凭证" });
+  }
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
+
+    // 查找用户，如果没有则自动注册
+    let user = db.prepare("SELECT * FROM users WHERE username = ?").get(email);
+    
+    if (!user) {
+      // 创建新用户，因为是第三方登录，密码可以留空或随机
+      const result = db
+        .prepare("INSERT INTO users (username, password) VALUES (?, ?)")
+        .run(email, ""); // 第三方登录不需要密码
+      user = { id: result.lastInsertRowid, username: email };
+    }
+
+    // 生成 JWT
+    const token = jwt.sign(
+      { userId: user.id, username: user.username },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({
+      code: 200,
+      message: "Google 登录成功",
+      data: { token, username: user.username },
+    });
+  } catch (error) {
+    console.error("Google 登录失败:", error);
+    res.json({ code: 401, message: "Google 登录验证失败，请检查 Client ID 是否配置正确" });
+  }
+});
+
 module.exports = router;
 
 // 同时导出密钥和验证中间件，供其他路由使用

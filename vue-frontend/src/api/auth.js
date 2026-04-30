@@ -17,3 +17,12 @@ export async function login(body) {
     data: body,
   });
 }
+
+/** 谷歌登录 POST /api/vue-frontend/auth/google-login */
+export async function googleLogin(credential) {
+  return request("/api/vue-frontend/auth/google-login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    data: { credential },
+  });
+}

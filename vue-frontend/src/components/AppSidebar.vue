@@ -137,11 +137,12 @@ import {
 <style scoped>
 .sidebar {
   width: 280px;
-  background: #ffffff;
+  background: transparent;
   flex-shrink: 0;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   position: relative;
+  border-right: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .sidebar-closed {
@@ -156,31 +157,27 @@ import {
 }
 
 .create-btn {
-  margin: 0 16px 16px;
-  width: 100px;
-  height: 48px;
+  margin: 0 16px 24px;
+  width: 120px;
+  height: 44px;
   background: #ffffff;
-  border: 1px solid #dadce0;
-  border-radius: 24px;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   font-size: 14px;
-  color: #3c4043;
+  color: #1d1d1f;
   font-weight: 500;
-  box-shadow:
-    0 1px 2px 0 rgba(60, 64, 67, 0.3),
-    0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .create-btn:hover {
-  box-shadow:
-    0 1px 3px 0 rgba(60, 64, 67, 0.3),
-    0 4px 8px 3px rgba(60, 64, 67, 0.15);
-  background: #f8f9fa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .plus-icon {
@@ -198,25 +195,25 @@ import {
   height: 40px;
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 16px;
   cursor: pointer;
-  border-radius: 0 20px 20px 0;
-  margin-right: 16px;
-  color: #3c4043;
+  border-radius: 8px;
+  margin: 2px 16px;
+  color: #5f6368;
   font-size: 14px;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .nav-item:hover {
-  background: #f1f3f4;
+  background: rgba(0, 0, 0, 0.04);
+  color: #1d1d1f;
 }
 
 .nav-item.active {
-  background: #e8f0fe;
+  background: #ffffff;
   color: #1a73e8;
-  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .nav-icon {
@@ -237,8 +234,8 @@ import {
 
 .nav-divider {
   height: 1px;
-  background: #dadce0;
-  margin: 8px 0;
+  background: rgba(0,0,0,0.06);
+  margin: 12px 16px;
 }
 
 .nav-group-title {

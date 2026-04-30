@@ -6,7 +6,9 @@ export const currentMenu = ref("all");
 export const isListsCollapsed = ref(false);
 export const showNewListModal = ref(false);
 export const newListName = ref("");
-export const dateOptions = ["今天", "明天", "周一"];
+
+// 选中的日历日期过滤（默认不选中任何日期，展示所有）
+export const selectedDate = ref("");
 
 export const lists = ref([]);
 
@@ -31,11 +33,6 @@ export const openAddTask = (list) => {
   list.isAdding = true;
   list.newTaskTitle = "";
   list.newTaskDetails = "";
-  list.newTaskDate = "";
-};
-
-export const setDate = (list, date) => {
-  list.newTaskDate = list.newTaskDate === date ? "" : date;
 };
 
 export const cancelAdd = (list) => {

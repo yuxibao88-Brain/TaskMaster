@@ -11,6 +11,11 @@ db.exec(`CREATE TABLE IF NOT EXISTS users (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP -- 注册时间
 )`);
 
+// 添加用户资料字段（头像、昵称、签名）
+try { db.exec("ALTER TABLE users ADD COLUMN nickname TEXT DEFAULT ''"); } catch (e) {}
+try { db.exec("ALTER TABLE users ADD COLUMN avatar TEXT DEFAULT ''"); } catch (e) {}
+try { db.exec("ALTER TABLE users ADD COLUMN bio TEXT DEFAULT ''"); } catch (e) {}
+
 // 任务列表表（每个列表属于某个用户）
 db.exec(`CREATE TABLE IF NOT EXISTS task_lists (
   id INTEGER PRIMARY KEY AUTOINCREMENT,        -- 主键自增

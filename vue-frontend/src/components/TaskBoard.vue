@@ -3,9 +3,8 @@ import {
   currentMenu,
   lists,
   allStarredTasks,
-  dateOptions,
+  selectedDate,
   openAddTask,
-  setDate,
   cancelAdd,
 } from "../store.js";
 import { addTask, patchTask, deleteTask as deleteTaskApi } from "../api/task.js";
@@ -27,13 +26,13 @@ const saveTask = async (list) => {
       id: res.data.id,
       title: list.newTaskTitle,
       details: list.newTaskDetails,
-      date: list.newTaskDate,
+      date: "",
       completed: 0,
       starred: 0,
+      created_at: new Date().toISOString().replace('T', ' ').substring(0, 19)
     });
     list.newTaskTitle = "";
     list.newTaskDetails = "";
-    list.newTaskDate = "";
   }
 };
 
@@ -86,17 +85,19 @@ const handleDeleteList = async (list) => {
       <div class="task-list wide-list">
         <div class="list-header">
           <h2 class="list-title">已加星标的任务</h2>
-          <button class="icon-btn more-btn">⋮</button>
+          <button class="icon-btn more-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+          </button>
         </div>
 
         <div class="add-transition-wrapper">
           <div class="add-task-trigger">
             <span class="add-icon">
-              ✓
-              <small
-                style="position: absolute; margin-left: -4px; margin-top: 6px"
-                >+</small
-              >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18">
+                <path d="M12 5v14M5 12h14"></path>
+              </svg>
             </span>
             <span class="add-text">将任务加注星标</span>
           </div>
@@ -124,9 +125,15 @@ const handleDeleteList = async (list) => {
             v-for="task in allStarredTasks"
             :key="task.id"
             :class="{ completed: task.completed }"
+            v-show="!selectedDate || (task.created_at && task.created_at.substring(0, 10) === selectedDate)"
           >
             <button class="circle-btn" @click="toggleTask(task)">
-              {{ task.completed ? "✓" : "◯" }}
+              <svg v-if="task.completed" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
             </button>
             <div class="task-content">
               <span class="task-title">{{ task.title }}</span>
@@ -148,7 +155,12 @@ const handleDeleteList = async (list) => {
                 @click="toggleStar(task)"
                 :class="{ 'is-starred': task.starred }"
               >
-                {{ task.starred ? "★" : "☆" }}
+                <svg v-if="task.starred" viewBox="0 0 24 24" fill="#fbbc04" width="18" height="18">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" width="18" height="18">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
               </button>
             </div>
           </div>
@@ -165,7 +177,6 @@ const handleDeleteList = async (list) => {
         :key="list.id"
         v-show="currentMenu === 'all' || currentMenu === list.id"
       >
-        <div class="list-drag-handle"></div>
         <div class="list-header">
           <h2 class="list-title">{{ list.name }}</h2>
           <button class="icon-btn more-btn" @click="handleDeleteList(list)" title="删除列表">
@@ -183,11 +194,9 @@ const handleDeleteList = async (list) => {
               @click="openAddTask(list)"
             >
               <span class="add-icon">
-                ✓
-                <small
-                  style="position: absolute; margin-left: -4px; margin-top: 6px"
-                  >+</small
-                >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="18" height="18">
+                  <path d="M12 5v14M5 12h14"></path>
+                </svg>
               </span>
               <span class="add-text">添加任务</span>
             </div>
@@ -195,7 +204,11 @@ const handleDeleteList = async (list) => {
             <!-- 激活状态：添加任务输入框 -->
             <div v-else class="add-task-form">
               <div class="form-inputs">
-                <button class="circle-empty" @click="cancelAdd(list)">◯</button>
+                <button class="circle-empty" @click="cancelAdd(list)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <circle cx="12" cy="12" r="10"></circle>
+                  </svg>
+                </button>
                 <div class="inputs-wrapper">
                   <input
                     type="text"
@@ -215,19 +228,12 @@ const handleDeleteList = async (list) => {
                   />
                 </div>
               </div>
-              <div class="form-actions">
-                <div class="chips">
-                  <button
-                    v-for="d in dateOptions"
-                    :key="d"
-                    class="chip"
-                    :class="{ 'chip-active': list.newTaskDate === d }"
-                    @click="setDate(list, d)"
-                  >
-                    {{ d }}
-                  </button>
-                </div>
-                <button class="save-btn" @click="saveTask(list)">↵</button>
+              <div class="form-actions" style="justify-content: flex-end;">
+                <button class="save-btn" @click="saveTask(list)">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"/>
+                  </svg>
+                </button>
               </div>
             </div>
           </transition>
@@ -240,9 +246,15 @@ const handleDeleteList = async (list) => {
             v-for="task in list.tasks"
             :key="task.id"
             :class="{ completed: task.completed }"
+            v-show="!selectedDate || (task.created_at && task.created_at.substring(0, 10) === selectedDate)"
           >
             <button class="circle-btn" @click="toggleTask(task)">
-              {{ task.completed ? "✓" : "◯" }}
+              <svg v-if="task.completed" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
             </button>
             <div class="task-content">
               <span class="task-title">{{ task.title }}</span>
@@ -266,7 +278,12 @@ const handleDeleteList = async (list) => {
                 @click="toggleStar(task)"
                 :class="{ 'is-starred': task.starred }"
               >
-                {{ task.starred ? "★" : "☆" }}
+                <svg v-if="task.starred" viewBox="0 0 24 24" fill="#fbbc04" width="18" height="18">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" width="18" height="18">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
               </button>
             </div>
           </div>
@@ -279,6 +296,8 @@ const handleDeleteList = async (list) => {
 <style scoped>
 .board-area {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 24px;
@@ -288,7 +307,8 @@ const handleDeleteList = async (list) => {
 .lists-wrapper {
   display: flex;
   gap: 24px;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   align-items: flex-start;
 }
 
@@ -298,25 +318,15 @@ const handleDeleteList = async (list) => {
 .task-list {
   width: 360px;
   background: #ffffff;
-  border-radius: 12px;
-  padding: 8px 16px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  padding: 16px 16px;
   flex-shrink: 0;
   max-height: 100%;
   display: flex;
   flex-direction: column;
-  box-shadow:
-    0 1px 2px 0 rgba(60, 64, 67, 0.3),
-    0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
   position: relative;
-}
-
-/* 顶部拖拽手柄条 */
-.list-drag-handle {
-  width: 32px;
-  height: 4px;
-  background-color: #dadce0;
-  border-radius: 2px;
-  margin: 0 auto 12px auto;
 }
 
 .list-header {
@@ -332,6 +342,7 @@ const handleDeleteList = async (list) => {
   font-size: 16px;
   font-weight: 500;
   margin: 0;
+  line-height: 1.2;
 }
 
 /* 添加区域包裹器，固定最小高度避免跳闪 */
@@ -370,8 +381,9 @@ const handleDeleteList = async (list) => {
 }
 
 .add-icon {
-  font-weight: bold;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ================= 空状态样式 ================= */
@@ -422,11 +434,11 @@ const handleDeleteList = async (list) => {
 
 /* 添加任务表单 (输入态) */
 .add-task-form {
-  background: #f1f3f4;
-  border-radius: 8px;
+  background: #ffffff;
+  border-radius: 12px;
   padding: 12px;
   margin-bottom: 8px;
-  box-shadow: inset 0 0 0 1px #1a73e8;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 0 0 1px rgba(26, 115, 232, 0.2);
 }
 
 .form-inputs {
@@ -436,8 +448,10 @@ const handleDeleteList = async (list) => {
 
 .circle-empty {
   color: #5f6368;
-  font-size: 18px;
-  margin-top: 2px;
+  display: flex;
+  align-items: flex-start;
+  padding: 0;
+  margin-top: 0;
   transition: color 0.2s;
   cursor: pointer;
   border: none;
@@ -482,37 +496,12 @@ const handleDeleteList = async (list) => {
   padding-left: 28px;
 }
 
-.chips {
-  display: flex;
-  gap: 8px;
-}
-
-/* 日期 Tag 样式及选中状态 */
-.chip {
-  background: #ffffff;
-  border: 1px solid #dadce0;
-  border-radius: 16px;
-  padding: 4px 12px;
-  font-size: 12px;
-  color: #3c4043;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.chip:hover {
-  background: #f8f9fa;
-}
-
-.chip.chip-active {
-  background: #e8f0fe;
-  color: #1a73e8;
-  border-color: #1a73e8;
-}
-
 .save-btn {
   background: transparent;
   color: #5f6368;
-  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 4px;
   transition: color 0.2s;
   cursor: pointer;
@@ -559,17 +548,20 @@ const handleDeleteList = async (list) => {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 12px 8px;
-  border-radius: 8px;
+  padding: 12px 10px;
+  border-radius: 10px;
   transition:
     background 0.2s ease,
+    box-shadow 0.2s ease,
     opacity 0.3s ease;
   cursor: pointer;
-  background: #ffffff;
+  background: transparent;
+  margin-bottom: 2px;
 }
 
 .task-item:hover {
-  background: #f1f3f4;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 /* 悬浮操作按钮区域 */
@@ -623,9 +615,10 @@ const handleDeleteList = async (list) => {
 
 .circle-btn {
   color: #5f6368;
-  font-size: 18px;
   padding: 0;
-  margin-top: 2px;
+  margin-top: 0;
+  display: flex;
+  align-items: flex-start;
   transition: color 0.2s;
   cursor: pointer;
   border: none;
@@ -646,6 +639,7 @@ const handleDeleteList = async (list) => {
 .task-title {
   font-size: 14px;
   color: #3c4043;
+  line-height: 1.4;
   transition:
     color 0.3s,
     text-decoration 0.3s;

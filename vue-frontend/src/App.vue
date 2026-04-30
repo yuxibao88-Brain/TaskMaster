@@ -78,9 +78,11 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100vh;
-  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
-  background-color: #ffffff;
-  color: #202124;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: #f4f5f8;
+  color: #1d1d1f;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #app {
@@ -95,12 +97,14 @@ body, html {
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background-color: #f8f9fa;
+  background-color: #f4f5f8;
+  background-image: radial-gradient(circle at 50% 0%, #ffffff 0%, transparent 70%);
 }
 
 .main-layout {
   display: flex;
   flex: 1;
   overflow: hidden;
+  position: relative;
 }
 </style>
