@@ -70,18 +70,21 @@ onMounted(() => {
     </div>
     <AddListModal />
     <footer class="app-footer">
-      一切问题联系 包玉玺 <a href="mailto:yuxibao88@gmail.com">yuxibao88@gmail.com</a>
+      联系 Brain <a href="mailto:yuxibao88@gmail.com">yuxibao88@gmail.com</a>
     </footer>
   </div>
 </template>
 
 <style>
 /* 全局重置 */
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   background-color: #f4f5f8;
   color: #1d1d1f;
   -webkit-font-smoothing: antialiased;
@@ -101,7 +104,11 @@ body, html {
   height: 100vh;
   overflow: hidden;
   background-color: #f4f5f8;
-  background-image: radial-gradient(circle at 50% 0%, #ffffff 0%, transparent 70%);
+  background-image: radial-gradient(
+    circle at 50% 0%,
+    #ffffff 0%,
+    transparent 70%
+  );
 }
 
 .main-layout {
