@@ -69,6 +69,9 @@ onMounted(() => {
       <TaskBoard />
     </div>
     <AddListModal />
+    <footer class="app-footer">
+      一切问题联系 包玉玺 <a href="mailto:yuxibao88@gmail.com">yuxibao88@gmail.com</a>
+    </footer>
   </div>
 </template>
 
@@ -106,5 +109,30 @@ body, html {
   flex: 1;
   overflow: hidden;
   position: relative;
+}
+
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.3px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.app-footer a {
+  color: rgba(0, 0, 0, 0.4);
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.app-footer a:hover {
+  color: #1a73e8;
+  text-decoration: underline;
 }
 </style>
