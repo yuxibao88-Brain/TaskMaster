@@ -35,7 +35,7 @@ app.use("/api/vue-frontend/tasks", authMiddleware, tasksRouter);
 app.use("/api/vue-frontend/user", authMiddleware, userRouter);
 
 // 兜底路由：如果不是以 /api 开头的请求，全部返回前端的 index.html，以支持 Vue Router 的 History 模式
-app.get("*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
