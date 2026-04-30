@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server-db.js",
+    "build": "cd ../vue-frontend && npm install && npm run build && rm -rf ../express-demo/public && cp -r dist ../express-demo/public"
   },
   "keywords": [],
   "author": "",

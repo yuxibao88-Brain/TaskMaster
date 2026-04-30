@@ -1,7 +1,10 @@
 // ========== 数据库连接 + 建表 ==========
 const Database = require("better-sqlite3");
+const path = require("path");
 
-const db = new Database("myapp.db");
+// 使用环境变量中的路径，或者默认使用当前目录下的 myapp.db
+const dbPath = process.env.DB_PATH || path.join(__dirname, "myapp.db");
+const db = new Database(dbPath);
 
 // 用户表
 db.exec(`CREATE TABLE IF NOT EXISTS users (

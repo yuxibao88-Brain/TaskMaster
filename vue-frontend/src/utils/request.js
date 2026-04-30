@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const request = axios.create({
-  baseURL: "http://localhost:3001", // 后端地址
+  baseURL: import.meta.env.PROD ? "" : "http://localhost:3001", // 生产环境使用相对路径，开发环境使用本地后端
   timeout: 5000,
 });
 
