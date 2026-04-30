@@ -5,7 +5,7 @@ import AppSidebar from "./components/AppSidebar.vue";
 import TaskBoard from "./components/TaskBoard.vue";
 import AddListModal from "./components/AddListModal.vue";
 import LoginPage from "./components/LoginPage.vue";
-import { lists } from "./store.js";
+import { lists, isSidebarOpen, toggleSidebar } from "./store.js";
 import { getTaskLists } from "./api/taskList.js";
 
 // 登录状态
@@ -65,6 +65,12 @@ onMounted(() => {
   <div class="app-container" v-else>
     <AppHeader :username="currentUser" @logout="handleLogout" />
     <div class="main-layout">
+      <!-- 手机端侧边栏遮罩 -->
+      <div
+        class="sidebar-backdrop"
+        v-if="isSidebarOpen"
+        @click="toggleSidebar"
+      ></div>
       <AppSidebar />
       <TaskBoard />
     </div>
@@ -141,5 +147,33 @@ html {
 .app-footer a:hover {
   color: #1a73e8;
   text-decoration: underline;
+}
+
+/* 侧边栏遮罩（仅手机端生效） */
+.sidebar-backdrop {
+  display: none;
+}
+
+/* ============ 手机端适配 ============ */
+@media (max-width: 768px) {
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 99;
+  }
+
+  .main-layout {
+    flex-direction: column;
+  }
+
+  .app-footer {
+    font-size: 10px;
+    padding: 4px 0;
+  }
 }
 </style>

@@ -5,7 +5,16 @@ import {
   isListsCollapsed,
   showNewListModal,
   lists,
+  toggleSidebar,
 } from "../store.js";
+
+// 手机端点击菜单项后自动关闭侧边栏
+const handleNavClick = (menu) => {
+  currentMenu.value = menu;
+  if (window.innerWidth <= 768) {
+    toggleSidebar();
+  }
+};
 </script>
 
 <template>
@@ -24,7 +33,7 @@ import {
         <div
           class="nav-item"
           :class="{ active: currentMenu === 'all' }"
-          @click="currentMenu = 'all'"
+          @click="handleNavClick('all')"
         >
           <span class="nav-icon">
             <svg
@@ -44,7 +53,7 @@ import {
         <div
           class="nav-item"
           :class="{ active: currentMenu === 'starred' }"
-          @click="currentMenu = 'starred'"
+          @click="handleNavClick('starred')"
         >
           <span class="nav-icon">
             <svg
@@ -93,7 +102,7 @@ import {
               class="nav-item"
               v-for="list in lists"
               :key="list.id"
-              @click="currentMenu = list.id"
+              @click="handleNavClick(list.id)"
               :class="{ active: currentMenu === list.id }"
             >
               <span class="nav-icon">
@@ -266,5 +275,28 @@ import {
 
 .nav-collapse-content {
   overflow: hidden;
+}
+
+/* ============ 手机端适配 ============ */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebar-closed {
+    width: 280px;
+    transform: translateX(-100%);
+  }
 }
 </style>

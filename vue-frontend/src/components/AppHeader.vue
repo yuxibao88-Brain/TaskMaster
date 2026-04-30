@@ -489,4 +489,53 @@ const handleAvatarChange = (file) => {
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
 }
+
+/* ============ 手机端适配 ============ */
+@media (max-width: 768px) {
+  .header {
+    height: 56px;
+    padding: 0 12px 0 0;
+  }
+
+  .header-branding {
+    width: auto;
+    padding-left: 12px;
+    gap: 8px;
+  }
+
+  .header-branding::after {
+    display: none;
+  }
+
+  .logo-text {
+    font-size: 17px;
+  }
+
+  .logo-img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+
+  .username {
+    display: none;
+  }
+
+  .bio-text {
+    display: none;
+  }
+
+  .logout-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  :deep(.premium-dialog) {
+    width: 90vw !important;
+    max-width: 360px;
+  }
+}
 </style>

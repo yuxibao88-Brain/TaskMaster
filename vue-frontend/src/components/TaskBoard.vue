@@ -840,4 +840,46 @@ const handleDeleteList = async (list) => {
 .icon-btn:hover {
   background: #f1f3f4;
 }
+
+/* ============ 手机端适配 ============ */
+@media (max-width: 768px) {
+  .board-area {
+    padding: 16px 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .lists-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .task-list {
+    width: 100%;
+    flex-shrink: unset;
+    border-radius: 12px;
+  }
+
+  .wide-list {
+    width: 100%;
+  }
+
+  /* 触屏设备没有 hover，操作按钮始终可见 */
+  .task-actions {
+    opacity: 1;
+  }
+
+  .task-item {
+    padding: 10px 8px;
+    gap: 10px;
+  }
+
+  .empty-img {
+    width: 120px;
+  }
+
+  .empty-state {
+    padding: 32px 16px;
+  }
+}
 </style>

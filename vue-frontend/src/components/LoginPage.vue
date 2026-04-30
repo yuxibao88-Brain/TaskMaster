@@ -921,12 +921,18 @@ const handleGoogleCallback = async (response) => {
     height: auto;
     max-height: 90vh;
     overflow-y: auto;
+    width: 95%;
+    min-height: auto;
   }
 
   .card-left {
-    padding: 32px;
+    padding: 24px;
     border-right: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .hero-title {
+    font-size: 26px;
   }
 
   .illustration-container {
@@ -938,7 +944,36 @@ const handleGoogleCallback = async (response) => {
   }
 
   .card-right {
-    padding: 32px;
+    padding: 24px;
+  }
+
+  .form-wrapper {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    width: 100%;
+    border-radius: 0;
+    max-height: 100vh;
+    min-height: 100vh;
+  }
+
+  .card-left {
+    padding: 20px 16px;
+  }
+
+  .hero-title {
+    font-size: 22px;
+  }
+
+  .hero-desc {
+    font-size: 12px;
+  }
+
+  .card-right {
+    padding: 20px 16px;
   }
 }
 </style>
